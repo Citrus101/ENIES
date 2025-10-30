@@ -17,5 +17,15 @@ int cpu6502::process_state(uint8_t opcode){
 
    }
 
-   return cycles = 1;
+   return cycles;
 }
+
+cpu6502::cpu6502(/* args */){
+    std::cout << "cpu state created" << std::endl;
+}
+
+cpu6502::~cpu6502()
+{
+    std::cout << "cpu state destroyed" << std::endl;
+}
+

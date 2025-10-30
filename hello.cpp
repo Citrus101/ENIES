@@ -6,7 +6,7 @@
 // foo nice;
 int main(void){
     foo *nice = new foo();
-    // cpu6502 state_6502;
+    cpu6502 state_6502;
     std:: cout << "Hello, World!" << std:: endl;
     // std:: free(&nice);
 
