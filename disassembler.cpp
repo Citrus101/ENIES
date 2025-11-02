@@ -1,9 +1,66 @@
 #include <iostream>
-#include <cinttypes>
+#include <stdio.h>
+#include <fstream>
+#include <vector>
 #include <iomanip>
 
 uint16_t disassemble_opcode(uint8_t *code_buffer, uint16_t pc);
 
+int main(void){
+
+    FILE *file = fopen("Donkey Kong 3 (World).nes", "rb");
+    uint16_t pc = 0x10;
+    if (!file) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    // Find file size
+    fseek(file, 0, SEEK_END);
+    uint16_t size = ftell(file);
+    rewind(file);
+
+    // Allocate buffer and read data
+    uint8_t *buffer = (uint8_t *)malloc(size);
+
+    if (!buffer) {
+        fprintf(stderr, "Memory allocation failed\n");
+        fclose(file);
+        return 1;
+    }
+
+    uint16_t bytesRead = fread(buffer, 1, size, file);
+    fclose(file);
+
+    if (bytesRead != size) {
+        fprintf(stderr, "Error reading file\n");
+        free(buffer);
+        return 1;
+    }
+    while(pc < 0x0020){
+        pc += disassemble_opcode(buffer, pc);
+    }
+    // for(int =0x00; i < 0x4000; i++){
+    //     pc += disassemble_opcode(buffer, pc);
+    // }
+
+    free(buffer);
+
+    // Example: print first 16 bytes (the iNES header)
+    // for(int j=0;j<data.size();j+=16){
+    //     // printf("%04X    ", j);
+
+    //     for (int i = j; i < (j + 16) && i < data.size(); ++i) {
+
+    //         printf("%02X ", data[i]);
+
+    //     }
+
+    //     printf("\n");
+
+    // }
+    return 0;
+}
 
 
 uint16_t disassemble_opcode(uint8_t *code_buffer, uint16_t pc){
@@ -152,7 +209,7 @@ uint16_t disassemble_opcode(uint8_t *code_buffer, uint16_t pc){
     case 0x76: 
         std::cout << "ROR $00" << std::hex <<  code_1 << ", X" << " NZC---"  << std::endl; bytes = 2; break;
     case 0x78: 
-        std::cout << "SEI " << "---I--" << std::endl; break;
+        std::cout << "SEI " << "---1--" << std::endl; break;
     case 0x79: 
         std::cout << "ADC $" << std::hex <<  code_2 <<  std::hex << code_1 << ", Y" << " NZC--V"  << std::endl; bytes = 3; break;
     case 0x7D: 
